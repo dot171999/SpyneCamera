@@ -9,24 +9,36 @@ import SwiftUI
 
 struct HomeScreen: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State private var selectedTab: Tab = .galary
+    @State private var selectedTab: Tab = .photoGalary
     
-    private enum Tab: String {
-        case galary = "Photo Galary"
+    enum Tab: String, CaseIterable {
+        case photoGalary = "Photo Galary"
         case camera = "Camera"
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            PhotoGalleryView()
-                .tag(Tab.galary)
-                .ignoresSafeArea(.container, edges: .bottom)
-            CameraView()
-                .tag(Tab.camera)
-                
+        VStack(spacing: 0) {
+            HomeTabBarView(selectedTab: $selectedTab)
+            
+            TabView(selection: $selectedTab) {
+                PhotoGalleryView()
+                    .tag(Tab.photoGalary)
+                CameraView()
+                    .tag(Tab.camera)
+                    
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
         .ignoresSafeArea(.container, edges: .bottom)
+        .frame(width: getMacFrameWidth())
+    }
+    
+    private func getMacFrameWidth() -> CGFloat {
+#if targetEnvironment(macCatalyst)
+        return 450 // Set specific width for macOS
+#else
+        return UIScreen.main.bounds.width  // Default width for iPhone/iPad
+#endif
     }
 }
 

@@ -11,13 +11,33 @@
 		9213C8312CE098B500934E14 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9213C8302CE098B500934E14 /* HomeScreen.swift */; };
 		9213C8332CE098B700934E14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9213C8322CE098B700934E14 /* Assets.xcassets */; };
 		9213C8362CE098B700934E14 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9213C8352CE098B700934E14 /* Preview Assets.xcassets */; };
-		9213C8432CE09A6100934E14 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9213C8422CE09A6100934E14 /* CameraService.swift */; };
+		9213C8432CE09A6100934E14 /* CaptureSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9213C8422CE09A6100934E14 /* CaptureSessionManager.swift */; };
 		9213C8452CE09A7000934E14 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9213C8442CE09A7000934E14 /* NetworkManager.swift */; };
 		9213C8472CE09A8000934E14 /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9213C8462CE09A8000934E14 /* NetworkManagerProtocol.swift */; };
+		925D99D42CE2339700B63C89 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 929A382E2CE227CA00D0A436 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		925D99D72CE23E2F00B63C89 /* UploadableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99D62CE23E2F00B63C89 /* UploadableImageView.swift */; };
+		925D99D92CE2432700B63C89 /* ExpandedPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99D82CE2432700B63C89 /* ExpandedPhotoView.swift */; };
+		929A382F2CE227CA00D0A436 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 929A382E2CE227CA00D0A436 /* RealmSwift */; };
+		929A38312CE2289000D0A436 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929A38302CE2289000D0A436 /* Photo.swift */; };
 		92E16B3A2CE0A3FD00B210E6 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B392CE0A3FD00B210E6 /* CameraView.swift */; };
 		92E16B3C2CE0A64B00B210E6 /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B3B2CE0A64B00B210E6 /* PhotoGalleryView.swift */; };
 		92E16B3E2CE0C57900B210E6 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B3D2CE0C57900B210E6 /* TestView.swift */; };
+		92E16B402CE12F9700B210E6 /* HomeTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B3F2CE12F9700B210E6 /* HomeTabBarView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		925D99D52CE2339700B63C89 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				925D99D42CE2339700B63C89 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9213C82B2CE098B500934E14 /* SpyneCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpyneCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -26,12 +46,16 @@
 		9213C8322CE098B700934E14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9213C8352CE098B700934E14 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9213C83C2CE0990700934E14 /* SpyneCamera.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpyneCamera.entitlements; sourceTree = "<group>"; };
-		9213C8422CE09A6100934E14 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		9213C8422CE09A6100934E14 /* CaptureSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSessionManager.swift; sourceTree = "<group>"; };
 		9213C8442CE09A7000934E14 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		9213C8462CE09A8000934E14 /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
+		925D99D62CE23E2F00B63C89 /* UploadableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadableImageView.swift; sourceTree = "<group>"; };
+		925D99D82CE2432700B63C89 /* ExpandedPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedPhotoView.swift; sourceTree = "<group>"; };
+		929A38302CE2289000D0A436 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		92E16B392CE0A3FD00B210E6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		92E16B3B2CE0A64B00B210E6 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
 		92E16B3D2CE0C57900B210E6 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		92E16B3F2CE12F9700B210E6 /* HomeTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				929A382F2CE227CA00D0A436 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +118,9 @@
 				9213C8302CE098B500934E14 /* HomeScreen.swift */,
 				92E16B3B2CE0A64B00B210E6 /* PhotoGalleryView.swift */,
 				92E16B392CE0A3FD00B210E6 /* CameraView.swift */,
+				92E16B3F2CE12F9700B210E6 /* HomeTabBarView.swift */,
+				925D99D62CE23E2F00B63C89 /* UploadableImageView.swift */,
+				925D99D82CE2432700B63C89 /* ExpandedPhotoView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -107,6 +135,7 @@
 		9213C83F2CE09A0800934E14 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				929A38302CE2289000D0A436 /* Photo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -123,7 +152,7 @@
 		9213C8412CE09A4000934E14 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				9213C8422CE09A6100934E14 /* CameraService.swift */,
+				9213C8422CE09A6100934E14 /* CaptureSessionManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -145,12 +174,16 @@
 				9213C8272CE098B500934E14 /* Sources */,
 				9213C8282CE098B500934E14 /* Frameworks */,
 				9213C8292CE098B500934E14 /* Resources */,
+				925D99D52CE2339700B63C89 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = SpyneCamera;
+			packageProductDependencies = (
+				929A382E2CE227CA00D0A436 /* RealmSwift */,
+			);
 			productName = SpyneCamera;
 			productReference = 9213C82B2CE098B500934E14 /* SpyneCamera.app */;
 			productType = "com.apple.product-type.application";
@@ -179,6 +212,9 @@
 				Base,
 			);
 			mainGroup = 9213C8222CE098B500934E14;
+			packageReferences = (
+				929A382B2CE227CA00D0A436 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			productRefGroup = 9213C82C2CE098B500934E14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -209,10 +245,14 @@
 				92E16B3C2CE0A64B00B210E6 /* PhotoGalleryView.swift in Sources */,
 				9213C8312CE098B500934E14 /* HomeScreen.swift in Sources */,
 				9213C82F2CE098B500934E14 /* SpyneCameraApp.swift in Sources */,
+				929A38312CE2289000D0A436 /* Photo.swift in Sources */,
 				92E16B3E2CE0C57900B210E6 /* TestView.swift in Sources */,
+				92E16B402CE12F9700B210E6 /* HomeTabBarView.swift in Sources */,
 				92E16B3A2CE0A3FD00B210E6 /* CameraView.swift in Sources */,
+				925D99D92CE2432700B63C89 /* ExpandedPhotoView.swift in Sources */,
+				925D99D72CE23E2F00B63C89 /* UploadableImageView.swift in Sources */,
 				9213C8472CE09A8000934E14 /* NetworkManagerProtocol.swift in Sources */,
-				9213C8432CE09A6100934E14 /* CameraService.swift in Sources */,
+				9213C8432CE09A6100934E14 /* CaptureSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +390,7 @@
 				DEVELOPMENT_TEAM = 7C77BL6XPX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera to capture photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -384,6 +425,7 @@
 				DEVELOPMENT_TEAM = 7C77BL6XPX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera to capture photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +470,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		929A382B2CE227CA00D0A436 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		929A382E2CE227CA00D0A436 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 929A382B2CE227CA00D0A436 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9213C8232CE098B500934E14 /* Project object */;
 }

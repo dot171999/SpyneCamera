@@ -39,7 +39,6 @@ struct HomeTabBarView: View {
         .padding(.bottom, 2)
         .background( Color(colorScheme == .dark ? .black : .white))
     }
-    
 }
 
 #Preview {

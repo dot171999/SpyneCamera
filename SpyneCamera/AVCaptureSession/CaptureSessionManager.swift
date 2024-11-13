@@ -21,28 +21,11 @@ actor CaptureSessionManager {
     
     init(videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate) {
         self.videoBufferDelgate = videoBufferDelgate
-        Task {
-            await setup()
-        }
+        print("init: CaptureSessionManager")
     }
-    
+
     deinit {
-        print("007 sessionManager deinit")
-        if let observer = observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-    
-    func setup() {
-        setupObserver()
-    }
-    
-    private func setupObserver() {
-        self.observer = NotificationCenter.default.addObserver(forName: .AVCaptureSessionRuntimeError, object: captureSession, queue: nil) { notification in
-            if let error = notification.userInfo?[AVCaptureSessionErrorKey] as? NSError {
-                print("CaptureSessionManager: Runtime error: \(error.localizedDescription)")
-            }
-        }
+        print("deinit: CaptureSessionManager")
     }
     
     @discardableResult
@@ -62,7 +45,6 @@ actor CaptureSessionManager {
     func startSession() -> Bool {
         guard configuredSessionSuccessfully, !captureSession.isRunning else { return false }
         captureSession.startRunning()
-        print("CaptureSessionManager: session started")
         return true
     }
     
@@ -107,17 +89,11 @@ actor CaptureSessionManager {
     }
     
     private func setupVideoOutput() -> Bool {
-        // Set pixel format to avoid format mismatches
-//        let videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String) : NSNumber(value: kCVPixelFormatType_32BGRA as UInt32)]
-//        captureVideoDataOutput.videoSettings = videoSettings
-        // Add the video output and configure settings
-       
+        captureVideoDataOutput.alwaysDiscardsLateVideoFrames = true
+        captureVideoDataOutput.setSampleBufferDelegate(videoBufferDelgate, queue: DispatchQueue(label: "captureVideoDataOutput.Queue"))
+        
         guard captureSession.canAddOutput(captureVideoDataOutput) else { return false }
         captureSession.addOutput(captureVideoDataOutput)
-        captureVideoDataOutput.alwaysDiscardsLateVideoFrames = true
-        captureVideoDataOutput.setSampleBufferDelegate(videoBufferDelgate, queue: DispatchQueue(label: "videoQueue"))
-        
-    
         return true
     }
 
@@ -137,66 +113,3 @@ actor CaptureSessionManager {
     }
 }
 
-
-
-class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
-    private let completion: (UIImage?) -> Void
-    
-    init(completion: @escaping (UIImage?) -> Void) {
-        self.completion = completion
-        print("delegate init")
-    }
-    deinit {
-        print("007 delegate deinit")
-    }
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        if let error = error {
-            print("AVCapturePhotoCaptureDelegate: Unable to capture photo: \(error)")
-            completion(nil)
-            return
-        }
-        
-        if let photoData = photo.fileDataRepresentation(), let capturedPhoto = UIImage(data: photoData) {
-            //saveImageToGallery(capturedImage)
-            print("about to set photto")
-            completion(capturedPhoto)
-        } else {
-            print("AVCapturePhotoCaptureDelegate: PhotoData error.")
-        }
-    }
-}
-
-class VideoDataOutputSampleBufferDelegate : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
-    
-    private let completion: (UIImage?) -> Void
-    
-    init(completion: @escaping (UIImage?) -> Void) {
-        self.completion = completion
-        print("video buff delegate init")
-    }
-    deinit {
-        print("007 video buff delegate deinit")
-    }
-
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        
-        // Convert CMSampleBuffer to CIImage
-        let ciImage = CIImage(cvImageBuffer: pixelBuffer)
-        
-        // Create a CIContext for rendering the CIImage to a CGImage
-        let context = CIContext(options: [CIContextOption.useSoftwareRenderer: true])
-        
-        // Check if the CIImage can be rendered to a CGImage
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            // Convert CGImage to UIImage
-            let uiImage = UIImage(cgImage: cgImage)
-            
-            // Pass the UIImage to the completion handler
-            completion(uiImage)
-        } else {
-            print("Failed to create CGImage from CIImage")
-        }
-    }
-    
-}

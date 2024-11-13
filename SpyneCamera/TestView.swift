@@ -9,15 +9,20 @@ import SwiftUI
 
 struct TestView: View {
     var body: some View {
-        VStack {
-            Rectangle()
-                .foregroundColor(.blue)
+        ZStack {
+            Color.red
+                .ignoresSafeArea()
+            VStack {
+                Rectangle()
+                    .foregroundColor(.blue)
+                    .ignoresSafeArea()
+            }
+            
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            .border(Color.red)
+            //.padding()
         }
-        
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea()
-        .border(Color.red)
-        
         
     }
 }

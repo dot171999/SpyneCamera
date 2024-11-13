@@ -9,8 +9,9 @@ import Foundation
 import RealmSwift
 
 class Photo: Object, Identifiable {
-    @Persisted var nameWithExtension: String
-    @Persisted var urlPath: String
+    @Persisted(primaryKey: true) var name: String
+    @Persisted var urlPathString: String
     @Persisted var captureDate: Date
     @Persisted var isUploaded: Bool = false
+    
 }

@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct HomeScreen: View {
-    @Environment(\.colorScheme) private var colorScheme
     @State private var selectedTab: Tab = .photoGalary
     
     enum Tab: String, CaseIterable {
@@ -34,14 +34,17 @@ struct HomeScreen: View {
     }
     
     private func getMacFrameWidth() -> CGFloat {
-#if targetEnvironment(macCatalyst)
-        return 450 // Set specific width for macOS
-#else
-        return UIScreen.main.bounds.width  // Default width for iPhone/iPad
-#endif
+        #if targetEnvironment(macCatalyst)
+            return 450 // Set specific width for macOS
+        #else
+            return UIScreen.main.bounds.width  
+        #endif
     }
 }
 
 #Preview {
-    HomeScreen()
+    let congif = Realm.Configuration(inMemoryIdentifier:  "YES1")
+        
+    return HomeScreen()
+        .environment(\.realmConfiguration, congif)
 }

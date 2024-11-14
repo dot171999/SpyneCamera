@@ -10,9 +10,9 @@ import AVFoundation
 import PhotosUI
 
 class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
-    private let completion: (UIImage?) -> Void
+    private let completion: (Result<UIImage, PhotoCaptureError>) -> Void
     
-    init(completion: @escaping (UIImage?) -> Void) {
+    init(completion: @escaping (_ result: Result<UIImage, PhotoCaptureError>) -> Void) {
         self.completion = completion
         print("init: PhotoCaptureDelegate")
     }
@@ -23,15 +23,14 @@ class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error = error {
-            print("AVCapturePhotoCaptureDelegate: Unable to capture photo: \(error)")
-            completion(nil)
+            completion(.failure(.error(error)))
             return
         }
-        
+    
         if let photoData = photo.fileDataRepresentation(), let capturedPhoto = UIImage(data: photoData) {
-            completion(capturedPhoto)
+            completion(.success(capturedPhoto))
         } else {
-            print("AVCapturePhotoCaptureDelegate: PhotoData error.")
+            completion(.failure(.unableToConvertDataToUIImage))
         }
     }
 }

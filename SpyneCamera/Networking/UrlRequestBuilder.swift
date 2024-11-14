@@ -25,6 +25,7 @@ struct UrlRequestBuilder {
     enum MIMEType {
         case multiPart(boundary: String)
         case jpgImage
+        case none
         
         var stringValue: String {
             switch self {
@@ -32,11 +33,13 @@ struct UrlRequestBuilder {
                 return "multipart/form-data; boundary=\(boundary)"
             case .jpgImage:
                 return "image/jpeg"
+            case .none:
+                return ""
             }
         }
     }
     
-    func buildRequest(url: URL, method: HTTPMethod, mimeType: MIMEType, body: Data? = nil, headers: [HTTPHeaderField: String]? = nil) -> URLRequest {
+    func buildRequest(url: URL, method: HTTPMethod, mimeType: MIMEType = .none, body: Data? = nil, headers: [HTTPHeaderField: String]? = nil) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.setValue(url.host(), forHTTPHeaderField: HTTPHeaderField.host.rawValue)
@@ -60,8 +63,8 @@ struct UrlRequestBuilder {
         
         body.append("--\(boundary)\r\n")
         
-        body.append("\(HTTPHeaderField.contentDisposition): form-data; name=\"\(field)\"; filename=\"\(fileName)\"\r\n")
-        body.append("\(HTTPHeaderField.contentType): \(mimeType.stringValue)\r\n\r\n")
+        body.append("\(HTTPHeaderField.contentDisposition.rawValue): form-data; name=\"\(field)\"; filename=\"\(fileName)\"\r\n")
+        body.append("\(HTTPHeaderField.contentType.rawValue): \(mimeType.stringValue)\r\n\r\n")
         body.append(data)
         body.append("\r\n")
         

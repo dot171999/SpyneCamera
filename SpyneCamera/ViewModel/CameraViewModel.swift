@@ -10,12 +10,13 @@ import RealmSwift
 import PhotosUI
 
 @Observable class CameraViewModel {
+    private let photoService: PhotoManager = PhotoManager()
+    
     private(set) var cameraPreviewFrameImage: UIImage?
     private(set) var capturedImage: UIImage?
-    
-    private let photoService: PhotoService = PhotoService()
-    
-    var isAuthorized: Bool {
+    private(set) var errorMessage: String = ""
+    var showErrorAlert: Bool = false
+    private var isAuthorized: Bool {
         get async {
             let status = AVCaptureDevice.authorizationStatus(for: .video)
             var isAuthorized = status == .authorized
@@ -23,7 +24,6 @@ import PhotosUI
             if status == .notDetermined {
                 isAuthorized = await AVCaptureDevice.requestAccess(for: .video)
             }
-            
             return isAuthorized
         }
     }
@@ -37,30 +37,73 @@ import PhotosUI
     }
     
     @ObservationIgnored lazy private var videoBufferDelgate: VideoDataOutputSampleBufferDelegate = {
-        let videoBufferDelgate = VideoDataOutputSampleBufferDelegate(completion: { [unowned self] image in
-            guard let image = image else { return }
-            self.capturedImage = image
+        let videoBufferDelgate = VideoDataOutputSampleBufferDelegate(completion: { [unowned self] result in
+            switch result {
+            case .success(let uiImage):
+                self.capturedImage = uiImage
+            case .failure(let error):
+                break
+            }
         })
         return videoBufferDelgate
     }()
     
     @ObservationIgnored lazy private var photoCaptureDelegate: PhotoCaptureDelegate = {
-        let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [unowned self] image in
-            guard let image = image else { return }
-            self.cameraPreviewFrameImage = image
-            self.photoService.savePhoto(image)
-            
+        let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [unowned self] result in
+            switch result {
+            case .success(let uiImage):
+                self.cameraPreviewFrameImage = uiImage
+                do {
+                    try self.photoService.savePhoto(uiImage)
+                } catch {
+                    errorMessage = error.localizedDescription
+                    showErrorAlert = true
+                }
+            case .failure(let error):
+                break
+            }
         })
         return photoCaptureDelegate
     }()
     
-    @ObservationIgnored lazy private(set) var captureSessionManager: CaptureSessionManager = { [unowned self] in
+    @ObservationIgnored lazy private var captureSessionManager: CaptureSessionManager = { [unowned self] in
         return CaptureSessionManager(videoBufferDelgate: self.videoBufferDelgate)
     }()
     
+    @MainActor
+    func setup() async {
+        guard await isAuthorized else {
+            errorMessage = "Need Camera Permission."
+            showErrorAlert = true
+            return
+        }
+        do {
+            try await captureSessionManager.configureSession()
+            await captureSessionManager.startSession()
+        } catch {
+            if let error = error as? CaptureSessionError {
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
+        }
+    }
+    
+    func stopSession() {
+        Task {
+            await captureSessionManager.stopSession()
+        }
+    }
+    
     func clickPhoto() {
         Task {
-            await captureSessionManager.capturePhoto(photoCaptureDelegate: photoCaptureDelegate)
+            do {
+                try await captureSessionManager.capturePhoto(photoCaptureDelegate: photoCaptureDelegate)
+            } catch {
+                if let error = error as? CaptureSessionError {
+                    errorMessage = error.localizedDescription
+                    showErrorAlert = true
+                }
+            }
         }
     }
 }

@@ -8,17 +8,6 @@
 import SwiftUI
 import RealmSwift
 
-@Observable class PhotoGalleryViewModel {
-    let photoService: PhotoService = PhotoService()
-    init() {
-        print("init: PhotoGalleryViewModel")
-    }
-    
-    deinit {
-        print("deinit: PhotoGalleryViewModel")
-    }
-}
-
 struct PhotoGalleryView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel = PhotoGalleryViewModel()
@@ -28,24 +17,18 @@ struct PhotoGalleryView: View {
     private let lazyVGridRowSpacing: CGFloat = 2
     private let lazyVGridColumns: [GridItem] = [GridItem(spacing: 2), GridItem()]
     
-    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: lazyVGridColumns, spacing: lazyVGridRowSpacing) {
                 ForEach(photos, id: \.self) { photo in
-                    let currentUploadTask = viewModel.photoService.uploadingTaskProgress
-                    
-                    if photo.name == currentUploadTask.taskID {
-                        let _ = print(currentUploadTask)
-                    }
-                    UploadableImageView(progress: photo.name == currentUploadTask.taskID ? currentUploadTask.progress : nil, photo: photo)
+                    UploadableImageView(progress: viewModel.progress(for: photo), photo: photo)
                         .onTapGesture {
                             presentSheet = photo
                         }
                 }
                 #if targetEnvironment(simulator)
-                ForEach(0..<20, id: \.self) { photo in
-                    UploadableImageView(photo: Photo())
+                ForEach(0..<50, id: \.self) { photo in
+                    UploadableImageView(progress: 0.5, photo: Photo())
                         .onTapGesture {
                             presentSheet = Photo()
                         }
@@ -53,19 +36,22 @@ struct PhotoGalleryView: View {
                 #endif
             }
         }
+        .alert("Error", isPresented: $viewModel.showErrorAlert, actions: {
+            Button("OK", role: .cancel) {}
+        }, message: {
+            Text(viewModel.errorMessage)
+        })
         .sheet(item: $presentSheet, content: { photo in
             ExpandedPhotoView(photo: photo)
         })
         .onAppear() {
-            for photo in photos {
-                viewModel.photoService.requestUploadToCloud(photo: photo)
-            }
+            viewModel.upload(photos)
         }
     }
 }
 
 #Preview {
-    let congif = Realm.Configuration(inMemoryIdentifier:  "YES")
+    let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
     return PhotoGalleryView()
         .environment(\.realmConfiguration, congif)
 }

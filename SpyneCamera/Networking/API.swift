@@ -12,7 +12,7 @@ struct API {
     static let baseUrl: URL = URL(string: "https://\(host)")!
     
     enum Endpoint: String {
-        case upload = "upload"
+        case upload = "api/upload"
     }
     
     static func urlForEndpoint(_ endpoint: Endpoint) -> URL {

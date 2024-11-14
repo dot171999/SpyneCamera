@@ -43,7 +43,7 @@ struct HomeScreen: View {
 }
 
 #Preview {
-    let congif = Realm.Configuration(inMemoryIdentifier:  "YES1")
+    let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
         
     return HomeScreen()
         .environment(\.realmConfiguration, congif)

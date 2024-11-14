@@ -28,15 +28,16 @@ struct CameraView: View {
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .alert("Error", isPresented: $viewModel.showErrorAlert, actions: {
+            Button("OK", role: .cancel) {}
+        }, message: {
+            Text(viewModel.errorMessage)
+        })
         .task {
-            guard await viewModel.isAuthorized else { return }
-            await viewModel.captureSessionManager.configureSession()
-            await viewModel.captureSessionManager.startSession()
+            await viewModel.setup()
         }
         .onDisappear {
-            Task {
-                await viewModel.captureSessionManager.stopSession()
-            }
+            viewModel.stopSession()
         }
     }
 }

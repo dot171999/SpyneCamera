@@ -9,15 +9,22 @@ import Foundation
 import AVFoundation
 import PhotosUI
 
-actor CaptureSessionManager {
+protocol CaptureSession {
+    func configureSession() async throws
+    func startSession() async -> Bool
+    func stopSession() async
+    func capturePhoto(photoCaptureDelegate: PhotoCaptureDelegate) async throws
+}
+
+actor CaptureSessionManager: CaptureSession {
     private let captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDeviceInput: AVCaptureDeviceInput?
     private let capturePhotoOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
     private let captureVideoDataOutput: AVCaptureVideoDataOutput = AVCaptureVideoDataOutput()
-    private var observer: NSObjectProtocol?
-    private var isSessionConfigured: Bool = false
-    private var configuredSessionSuccessfully: Bool = false
+    
     private let videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate
+    private var isSessionConfiguredSuccessfully: Bool = false
+    private(set) var error: CaptureSessionError?
     
     init(videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate) {
         self.videoBufferDelgate = videoBufferDelgate
@@ -28,22 +35,24 @@ actor CaptureSessionManager {
         print("deinit: CaptureSessionManager")
     }
     
-    @discardableResult
-    func configureSession() -> Bool {
-        guard !isSessionConfigured else { return false }
-        isSessionConfigured = true
+    func configureSession() throws {
+        guard !isSessionConfiguredSuccessfully else { return }
         
         captureSession.sessionPreset = .photo
-        guard setupCaptureDeviceInput() else { return false }
-        guard setupCapturePhotoOutput() else { return false }
-        guard setupVideoOutput() else { return false }
-        configuredSessionSuccessfully = true
-        return true
+        do {
+            try setupCaptureDeviceInput()
+            try setupCapturePhotoOutput()
+            try setupVideoOutput()
+            isSessionConfiguredSuccessfully = true
+        } catch let error as CaptureSessionError {
+            self.error = error
+            throw error
+        }
     }
     
     @discardableResult
     func startSession() -> Bool {
-        guard configuredSessionSuccessfully, !captureSession.isRunning else { return false }
+        guard isSessionConfiguredSuccessfully, !captureSession.isRunning else { return false }
         captureSession.startRunning()
         return true
     }
@@ -52,7 +61,7 @@ actor CaptureSessionManager {
         captureSession.stopRunning()
     }
     
-    private func setupCaptureDeviceInput() ->  Bool {
+    private func setupCaptureDeviceInput() throws {
         let camera: AVCaptureDevice?
         
         if #available(macCatalyst 17.0, *) {
@@ -67,8 +76,7 @@ actor CaptureSessionManager {
         }
         
         guard let camera else {
-            print("CaptureSessionManager: CaptureDevice not available.")
-            return false
+            throw CaptureSessionError.cameraNotFound
         }
         
         do {
@@ -78,36 +86,33 @@ actor CaptureSessionManager {
                 captureSession.addInput(deviceInput)
                 captureDeviceInput = deviceInput
             } else {
-                print("CaptureSessionManager: Could not add captureDeviceInput to the captureSession.")
-                return false
+                throw CaptureSessionError.unableToAddCaptureDevice
             }
         } catch {
-            print("CaptureSessionManager: Could not captureDeviceInput from camera, error: ", error)
-            return false
+            throw CaptureSessionError.unableToCreateInputFromCaptureDevice(error)
         }
-        return true
     }
     
-    private func setupVideoOutput() -> Bool {
+    private func setupVideoOutput() throws {
         captureVideoDataOutput.alwaysDiscardsLateVideoFrames = true
         captureVideoDataOutput.setSampleBufferDelegate(videoBufferDelgate, queue: DispatchQueue(label: "captureVideoDataOutput.Queue"))
         
-        guard captureSession.canAddOutput(captureVideoDataOutput) else { return false }
+        guard captureSession.canAddOutput(captureVideoDataOutput) else {
+            throw CaptureSessionError.unableToAddCaptureVideoDataOutput
+        }
         captureSession.addOutput(captureVideoDataOutput)
-        return true
     }
 
-    private func setupCapturePhotoOutput() -> Bool {
+    private func setupCapturePhotoOutput() throws {
         guard captureSession.canAddOutput(capturePhotoOutput) else {
-            print("CaptureSessionManager: Could not add capturePhotoOutput to the captureSession.")
-            return false
+            throw CaptureSessionError.unableToAddCapturePhotoOutput
         }
             
         captureSession.addOutput(capturePhotoOutput)
-        return true
     }
     
-    func capturePhoto(photoCaptureDelegate: PhotoCaptureDelegate) {
+    func capturePhoto(photoCaptureDelegate: PhotoCaptureDelegate) throws {
+        guard isSessionConfiguredSuccessfully else { throw CaptureSessionError.sessionNotConfigured }
         let capturePhotoSettings = AVCapturePhotoSettings()
         capturePhotoOutput.capturePhoto(with: capturePhotoSettings, delegate: photoCaptureDelegate)
     }

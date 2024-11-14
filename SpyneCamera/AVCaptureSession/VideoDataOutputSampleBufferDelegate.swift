@@ -10,9 +10,9 @@ import AVFoundation
 import PhotosUI
 
 class VideoDataOutputSampleBufferDelegate : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
-    private let completion: (UIImage?) -> Void
+    private let completion: (Result<UIImage, VideoDataOutputError>) -> Void
     
-    init(completion: @escaping (UIImage?) -> Void) {
+    init(completion: @escaping (_ result: Result<UIImage, VideoDataOutputError>) -> Void) {
         self.completion = completion
         print("init: VideoDataOutputSampleBufferDelegate")
     }
@@ -22,7 +22,10 @@ class VideoDataOutputSampleBufferDelegate : NSObject, AVCaptureVideoDataOutputSa
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { 
+            completion(.failure(.sampleToImageBuffer))
+            return
+        }
         
         // Convert CMSampleBuffer to CIImage
         let ciImage = CIImage(cvImageBuffer: pixelBuffer)
@@ -36,9 +39,9 @@ class VideoDataOutputSampleBufferDelegate : NSObject, AVCaptureVideoDataOutputSa
             let uiImage = UIImage(cgImage: cgImage)
             
             // Pass the UIImage to the completion handler
-            completion(uiImage)
+            completion(.success(uiImage))
         } else {
-            print("VideoDataOutputSampleBufferDelegate: Failed to create CGImage from CIImage")
+            completion(.failure(.ciToCgImage))
         }
     }
 }

@@ -25,16 +25,13 @@ class RealmManager {
         print("deinit: RealmManager")
     }
     
-    @discardableResult
-    func add<T: Object>(object: T) -> Result<Bool, Error> {
+    func add<T: Object>(object: T) throws {
         do {
             try realm.write {
                 realm.add(object)
             }
-            return .success(true)
         } catch {
-            print("error writing to realm: ", error)
-            return .failure(error)
+            throw RealmError.unabelToAddObject(error)
         }
     }
     
@@ -46,13 +43,13 @@ class RealmManager {
         return realm.object(ofType: T.self, forPrimaryKey: primaryKey)
     }
     
-    func update(_ block: () -> Void) {
+    func update(_ block: () -> Void) throws {
         do {
             try realm.write {
                 block()
             }
         } catch {
-            // to do
+            throw RealmError.unableToWriteUpdates(error)
         }
     }
 }

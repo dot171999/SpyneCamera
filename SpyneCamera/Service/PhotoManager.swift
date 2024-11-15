@@ -13,8 +13,8 @@ import PhotosUI
     private let urlRequestBuilder: UrlRequestBuilder = UrlRequestBuilder()
     private let realmManager: RealmManager = RealmManager()
     private let fileManager: DataFileManager = DataFileManager()
-    @ObservationIgnored lazy private var networkService: NetworkService = { [unowned self] in
-        NetworkService(session: URLSession(configuration: .default, delegate: self, delegateQueue: .main))
+    @ObservationIgnored lazy private var networkService: NetworkService = { [weak self] in
+        NetworkService(sessionDelegate: self)
     }()
     
     // Acts like a serial queue
@@ -45,28 +45,29 @@ import PhotosUI
         try saveToRealm(url: photoFileUrl, name: photoName)
     }
     
-    func requestUploadToCloud(photo: Photo) throws {
-        guard !photo.isUploaded else { return }
-        guard !(pendingUploadRequests.contains { $0.name == photo.name }) else { return }
-        pendingUploadRequests.append(photo)
-        
-        guard !uploadInProgress else { return }
+    @MainActor func requestUploadToCloud(photos: Results<Photo>) async throws {
+        queuePhotosForUpload(photos)
+
+        guard !uploadInProgress else { print("returning"); return }
         uploadInProgress = true
+        
+        defer {
+            uploadInProgress = false
+        }
+        
+        try await processNextPhotoUpload()
+    }
     
-        Task {
-            do {
-                try await processNextPhotoUpload()
-            } catch {
-                throw error
-            }
+    func queuePhotosForUpload(_ photos: Results<Photo>) {
+        for photo in photos {
+            guard !photo.isUploaded else { break }
+            guard !(pendingUploadRequests.contains { $0.name == photo.name }) else { break }
+            pendingUploadRequests.append(photo)
         }
     }
     
     @MainActor private func processNextPhotoUpload() async throws {
-        guard !pendingUploadRequests.isEmpty, let photo = pendingUploadRequests.first else {
-            uploadInProgress = false
-            return
-        }
+        guard !pendingUploadRequests.isEmpty, let photo = pendingUploadRequests.first else { return }
         
         let photoDTO = PhotoDTO(from: photo)
         
@@ -99,9 +100,9 @@ import PhotosUI
         
         switch result {
         case .success(_):
-            await MainActor.run {
-                guard let photoObject: Photo = realmManager.objectForKey(primaryKey: photo.name) else { return }
-                try? realmManager.update {
+            await MainActor.run { [weak self] in
+                guard let photoObject: Photo = self?.realmManager.objectForKey(primaryKey: photo.name) else { return }
+                try? self?.realmManager.update {
                     photoObject.isUploaded = true
                 }
             }

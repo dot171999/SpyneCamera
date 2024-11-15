@@ -12,14 +12,19 @@ protocol NetworkProtocol {
 }
 
 class NetworkService: NetworkProtocol {
-    private let sessionTimeoutInSeconds: TimeInterval = 30
-    private let session: URLSession
+    private let sessionTimeoutInSeconds: TimeInterval = 10
+    private weak var sessionDelegate: URLSessionDelegate?
     
-    init(session: URLSession = URLSession(configuration: .default)) {
-        let configuration = session.configuration
+    private var session: URLSession {
+        let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         configuration.timeoutIntervalForRequest = sessionTimeoutInSeconds
-        self.session = session
+        let session = URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: .main)
+        return session
+    }
+    
+    init(sessionDelegate: URLSessionDelegate? = nil) {
+        self.sessionDelegate = sessionDelegate
         print("init: NetworkService")
     }
     
@@ -28,6 +33,7 @@ class NetworkService: NetworkProtocol {
     }
     
     func uploadTask(with request: URLRequest, taskID: String = UUID().uuidString) async -> Result<Data, NetworkError> {
+        let session = self.session
         do {
             let data: Data, response: URLResponse
             
@@ -42,6 +48,7 @@ class NetworkService: NetworkProtocol {
                 
                 task.taskDescription = taskID
                 task.resume()
+                session.finishTasksAndInvalidate()
             }
             
             guard let httpResponse = response as? HTTPURLResponse else { return .failure(.invalidResponse) }

@@ -42,5 +42,5 @@ struct HomeTabBarView: View {
 }
 
 #Preview {
-    HomeTabBarView(selectedTab: .constant(HomeScreen.Tab.photoGalary))
+    HomeTabBarView(selectedTab: .constant(HomeScreen.Tab.photoGallery))
 }

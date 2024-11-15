@@ -9,10 +9,10 @@ import SwiftUI
 import RealmSwift
 
 struct HomeScreen: View {
-    @State private var selectedTab: Tab = .photoGalary
+    @State private var selectedTab: Tab = .camera
     
     enum Tab: String, CaseIterable {
-        case photoGalary = "Photo Galary"
+        case photoGallery = "Photo Gallery"
         case camera = "Camera"
     }
     
@@ -22,29 +22,23 @@ struct HomeScreen: View {
             
             TabView(selection: $selectedTab) {
                 PhotoGalleryView()
-                    .tag(Tab.photoGalary)
-                CameraView()
-                    .tag(Tab.camera)
-                    
+                    .tag(Tab.photoGallery)
+                CameraView() {
+                    selectedTab = .photoGallery
+                }
+                .tag(Tab.camera)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .ignoresSafeArea(.container, edges: .bottom)
-        .frame(width: getMacFrameWidth())
-    }
-    
-    private func getMacFrameWidth() -> CGFloat {
         #if targetEnvironment(macCatalyst)
-            return 450 // Set specific width for macOS
-        #else
-            return UIScreen.main.bounds.width  
+        .frame(width: 450)
         #endif
     }
 }
 
 #Preview {
     let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
-        
     return HomeScreen()
         .environment(\.realmConfiguration, congif)
 }

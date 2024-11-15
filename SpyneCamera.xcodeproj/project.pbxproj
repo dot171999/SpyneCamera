@@ -157,8 +157,8 @@
 		9213C83E2CE09A0100934E14 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				925D99DA2CE2544D00B63C89 /* CameraViewModel.swift */,
 				9244B9992CE68F11004D8FB3 /* PhotoGalleryViewModel.swift */,
+				925D99DA2CE2544D00B63C89 /* CameraViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";

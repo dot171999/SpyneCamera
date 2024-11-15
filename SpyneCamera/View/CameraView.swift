@@ -8,17 +8,21 @@
 import SwiftUI
 import AVFoundation
 import Foundation
+import RealmSwift
 
 struct CameraView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State var viewModel = CameraViewModel()
+    @State private var viewModel = CameraViewModel()
+    @ObservedResults(Photo.self, sortDescriptor: SortDescriptor(keyPath: "captureDate", ascending: false)) private var photos
+    let action: () -> Void
     
     var body: some View {
         VStack(spacing: 0) {
-            CameraPreview(image: viewModel.capturedImage)
+            CameraPreview(image: viewModel.cameraPreviewFrameImage)
             ZStack {
                 HStack {
-                    CapturedPhotoPreview(image: viewModel.cameraPreviewFrameImage)
+                    let image = viewModel.capturedImage
+                    CapturedPhotoPreview(image: image == nil ? UIImage(contentsOfFile: photos.first?.urlPathString ?? "") : image)
                     Spacer()
                 }
                 ShutterButton {
@@ -28,6 +32,7 @@ struct CameraView: View {
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
         .alert("Error", isPresented: $viewModel.showErrorAlert, actions: {
             Button("OK", role: .cancel) {}
         }, message: {
@@ -53,13 +58,19 @@ extension CameraView {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
+                #if targetEnvironment(simulator)
+                Image("Image")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea(edges: .top)
+                #endif
             }
     }
     
     @ViewBuilder
     func CapturedPhotoPreview(image: UIImage?) -> some View {
         Rectangle()
-            .frame(width: 50, height: 50, alignment: .center)
+            .frame(width: 65, height: 65, alignment: .center)
             .foregroundColor(colorScheme == .dark ? .white : .black)
             .overlay {
                 if let image {
@@ -67,8 +78,17 @@ extension CameraView {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 }
+                #if targetEnvironment(simulator)
+                Image("Image1")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea(edges: .top)
+                #endif
             }
             .clipShape(.rect(cornerRadius: 10))
+            .onTapGesture {
+                action()
+            }
     }
     
     @ViewBuilder
@@ -76,16 +96,18 @@ extension CameraView {
         Button(action: action) {
             Circle()
                 .foregroundColor(colorScheme == .dark ? .white : .black)
-                .frame(width: 70, height: 70, alignment: .center)
+                .frame(width: 80, height: 80, alignment: .center)
                 .overlay(
                     Circle()
                         .stroke(colorScheme == .dark ? .black : .white, lineWidth: 2)
-                        .frame(width: 58, height: 58, alignment: .center)
+                        .frame(width: 68, height: 68, alignment: .center)
                 )
         }
     }
 }
 
 #Preview {
-    CameraView()
+    let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
+    return CameraView(action: {})
+        .environment(\.realmConfiguration, congif)
 }

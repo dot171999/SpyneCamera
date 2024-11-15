@@ -10,7 +10,7 @@ import RealmSwift
 import PhotosUI
 
 @Observable class CameraViewModel {
-    private let photoService: PhotoManager = PhotoManager()
+    private let photoManager: PhotoManager = PhotoManager()
     
     private(set) var cameraPreviewFrameImage: UIImage?
     private(set) var capturedImage: UIImage?
@@ -24,7 +24,11 @@ import PhotosUI
             if status == .notDetermined {
                 isAuthorized = await AVCaptureDevice.requestAccess(for: .video)
             }
+            #if targetEnvironment(simulator)
+            return true
+            #else
             return isAuthorized
+            #endif
         }
     }
     
@@ -37,10 +41,11 @@ import PhotosUI
     }
     
     @ObservationIgnored lazy private var videoBufferDelgate: VideoDataOutputSampleBufferDelegate = {
-        let videoBufferDelgate = VideoDataOutputSampleBufferDelegate(completion: { [unowned self] result in
+        let videoBufferDelgate = VideoDataOutputSampleBufferDelegate(completion: { [weak self] result in
             switch result {
             case .success(let uiImage):
-                self.capturedImage = uiImage
+                self?.cameraPreviewFrameImage = uiImage
+                
             case .failure(let error):
                 break
             }
@@ -52,9 +57,9 @@ import PhotosUI
         let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [unowned self] result in
             switch result {
             case .success(let uiImage):
-                self.cameraPreviewFrameImage = uiImage
+                self.capturedImage = uiImage
                 do {
-                    try self.photoService.savePhoto(uiImage)
+                    try self.photoManager.savePhoto(uiImage)
                 } catch {
                     errorMessage = error.localizedDescription
                     showErrorAlert = true
@@ -73,7 +78,7 @@ import PhotosUI
     @MainActor
     func setup() async {
         guard await isAuthorized else {
-            errorMessage = "Need Camera Permission."
+            errorMessage = CaptureSessionError.needCameraPermission.localizedDescription
             showErrorAlert = true
             return
         }

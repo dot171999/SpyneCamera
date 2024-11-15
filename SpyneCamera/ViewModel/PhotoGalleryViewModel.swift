@@ -20,11 +20,10 @@ import RealmSwift
         print("deinit: PhotoGalleryViewModel")
     }
     
-    func upload(_ photos: Results<Photo>) {
+    @MainActor
+    func upload(_ photos: Results<Photo>) async {
         do {
-            for photo in photos {
-                try photoManager.requestUploadToCloud(photo: photo)
-            }
+            try await photoManager.requestUploadToCloud(photos: photos)
         } catch {
             errorMessage = error.localizedDescription
             showErrorAlert = true

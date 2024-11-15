@@ -28,6 +28,7 @@ enum NetworkError: LocalizedError {
 }
 
 enum CaptureSessionError: LocalizedError {
+    case needCameraPermission
     case sessionNotConfigured
     case alreadyConfigured
     case cameraNotFound
@@ -38,6 +39,8 @@ enum CaptureSessionError: LocalizedError {
     
     var errorDescription: String? {
         switch self {
+        case .needCameraPermission:
+            return "Need Camera Permission."
         case .sessionNotConfigured:
             return "The capture session is not configured."
         case .alreadyConfigured:

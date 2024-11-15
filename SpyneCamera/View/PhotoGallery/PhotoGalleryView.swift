@@ -44,8 +44,8 @@ struct PhotoGalleryView: View {
         .sheet(item: $presentSheet, content: { photo in
             ExpandedPhotoView(photo: photo)
         })
-        .onAppear() {
-            viewModel.upload(photos)
+        .task {
+            await viewModel.upload(photos)
         }
     }
 }

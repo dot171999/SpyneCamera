@@ -22,7 +22,7 @@ actor CaptureSessionManager: CaptureSession {
     private let capturePhotoOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
     private let captureVideoDataOutput: AVCaptureVideoDataOutput = AVCaptureVideoDataOutput()
     
-    private let videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate
+    private weak var videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate?
     private var isSessionConfiguredSuccessfully: Bool = false
     private(set) var error: CaptureSessionError?
     

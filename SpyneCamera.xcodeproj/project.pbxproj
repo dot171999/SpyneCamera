@@ -28,6 +28,8 @@
 		925D99DD2CE29F5900B63C89 /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99DC2CE29F5900B63C89 /* PhotoManager.swift */; };
 		925D99E02CE2A14800B63C89 /* PhotoCaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99DF2CE2A14800B63C89 /* PhotoCaptureDelegate.swift */; };
 		925D99E22CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99E12CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift */; };
+		928C75F72CE87CA10062D881 /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928C75F62CE87CA00062D881 /* ToastManager.swift */; };
+		928C75F92CE886030062D881 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928C75F82CE886030062D881 /* View.swift */; };
 		929A382F2CE227CA00D0A436 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 929A382E2CE227CA00D0A436 /* RealmSwift */; };
 		929A38312CE2289000D0A436 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929A38302CE2289000D0A436 /* Photo.swift */; };
 		92E16B3A2CE0A3FD00B210E6 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B392CE0A3FD00B210E6 /* CameraView.swift */; };
@@ -73,6 +75,8 @@
 		925D99DC2CE29F5900B63C89 /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
 		925D99DF2CE2A14800B63C89 /* PhotoCaptureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDelegate.swift; sourceTree = "<group>"; };
 		925D99E12CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDataOutputSampleBufferDelegate.swift; sourceTree = "<group>"; };
+		928C75F62CE87CA00062D881 /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
+		928C75F82CE886030062D881 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		929A38302CE2289000D0A436 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		92E16B392CE0A3FD00B210E6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		92E16B3B2CE0A64B00B210E6 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
@@ -96,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				920A2F232CE4D761002EB29E /* Data.swift */,
+				928C75F82CE886030062D881 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -188,6 +193,7 @@
 				925D99DC2CE29F5900B63C89 /* PhotoManager.swift */,
 				920CCD3E2CE37ECF002C8286 /* RealmManager.swift */,
 				9244B9972CE66EF1004D8FB3 /* DataFileManager.swift */,
+				928C75F62CE87CA00062D881 /* ToastManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -301,6 +307,7 @@
 				9213C8452CE09A7000934E14 /* NetworkService.swift in Sources */,
 				920A2F222CE4D37E002EB29E /* API.swift in Sources */,
 				92E16B3C2CE0A64B00B210E6 /* PhotoGalleryView.swift in Sources */,
+				928C75F72CE87CA10062D881 /* ToastManager.swift in Sources */,
 				9213C8312CE098B500934E14 /* HomeScreen.swift in Sources */,
 				925D99E02CE2A14800B63C89 /* PhotoCaptureDelegate.swift in Sources */,
 				9213C82F2CE098B500934E14 /* SpyneCameraApp.swift in Sources */,
@@ -319,6 +326,7 @@
 				920A2F272CE4E352002EB29E /* UrlRequestBuilder.swift in Sources */,
 				925D99E22CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift in Sources */,
 				920A2F292CE578BE002EB29E /* LocalizedError.swift in Sources */,
+				928C75F92CE886030062D881 /* View.swift in Sources */,
 				9213C8432CE09A6100934E14 /* CaptureSessionManager.swift in Sources */,
 				925D99DB2CE2544D00B63C89 /* CameraViewModel.swift in Sources */,
 			);
@@ -463,8 +471,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -499,8 +507,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

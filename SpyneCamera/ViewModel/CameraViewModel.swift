@@ -10,8 +10,8 @@ import RealmSwift
 import PhotosUI
 
 @Observable class CameraViewModel {
-    private let photoManager: PhotoManager = PhotoManager()
-    
+    private let photoManager: PhotoManager
+    private let toastManager: ToastManager
     private(set) var cameraPreviewFrameImage: UIImage?
     private(set) var capturedImage: UIImage?
     private(set) var errorMessage: String = ""
@@ -32,7 +32,9 @@ import PhotosUI
         }
     }
     
-    init() {
+    init(toastManager: ToastManager = ToastManager.shared, photoManager: PhotoManager = PhotoManager()) {
+        self.photoManager = photoManager
+        self.toastManager =  toastManager
         print("init: CameraViewModel")
     }
     
@@ -45,7 +47,6 @@ import PhotosUI
             switch result {
             case .success(let uiImage):
                 self?.cameraPreviewFrameImage = uiImage
-                
             case .failure(let error):
                 break
             }
@@ -54,15 +55,16 @@ import PhotosUI
     }()
     
     @ObservationIgnored lazy private var photoCaptureDelegate: PhotoCaptureDelegate = {
-        let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [unowned self] result in
+        let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [weak self] result in
             switch result {
             case .success(let uiImage):
-                self.capturedImage = uiImage
+                self?.capturedImage = uiImage
                 do {
-                    try self.photoManager.savePhoto(uiImage)
+                    try self?.photoManager.savePhoto(uiImage)
+                    self?.toastManager.show(message: "Photo saved to storage.")
                 } catch {
-                    errorMessage = error.localizedDescription
-                    showErrorAlert = true
+                    self?.errorMessage = error.localizedDescription
+                    self?.showErrorAlert = true
                 }
             case .failure(let error):
                 break

@@ -9,7 +9,8 @@ import SwiftUI
 import RealmSwift
 
 struct HomeScreen: View {
-    @State private var selectedTab: Tab = .camera
+    @State var toastManager: ToastManager = ToastManager.shared
+    @State private var selectedTab: Tab = .photoGallery
     
     enum Tab: String, CaseIterable {
         case photoGallery = "Photo Gallery"
@@ -34,6 +35,8 @@ struct HomeScreen: View {
         #if targetEnvironment(macCatalyst)
         .frame(width: 450)
         #endif
+        .toast(toastManager)
+        .environment(toastManager)
     }
 }
 

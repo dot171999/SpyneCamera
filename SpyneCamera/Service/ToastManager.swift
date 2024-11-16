@@ -8,7 +8,20 @@
 import Foundation
 import SwiftUI
 
-@Observable class ToastManager {
+protocol ToastManagerProtocol {
+    var message: String { get }
+    var defaultDurationInSeconds: Int { get }
+    var showToast: Bool { get }
+    func show(message: String, durationInSeconds: Int?)
+}
+
+extension ToastManagerProtocol {
+    func show(message: String) {
+        show(message: message, durationInSeconds: nil)
+    }
+}
+
+@Observable class ToastManager: ToastManagerProtocol {
     static let shared = ToastManager()
     
     private(set) var message: String = ""
@@ -35,7 +48,7 @@ import SwiftUI
     }
     
     @MainActor
-    func nextToast() async {
+    private func nextToast() async {
         guard !toastQueue.isEmpty else {
             return
         }
@@ -55,7 +68,7 @@ import SwiftUI
 
 struct ToastModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
-    var toastManager: ToastManager
+    var toastManager: ToastManagerProtocol
     
     func body(content: Content) -> some View {
         ZStack(alignment: .top) {

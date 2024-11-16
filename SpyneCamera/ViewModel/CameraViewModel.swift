@@ -10,12 +10,10 @@ import RealmSwift
 import PhotosUI
 
 @Observable class CameraViewModel {
-    private let photoManager: PhotoManager
-    private let toastManager: ToastManager
+    private let photoManager: PhotoManagerProtocol
+    private let toastManager: ToastManagerProtocol
     private(set) var cameraPreviewFrameImage: UIImage?
     private(set) var capturedImage: UIImage?
-    private(set) var errorMessage: String = ""
-    var showErrorAlert: Bool = false
     private var isAuthorized: Bool {
         get async {
             let status = AVCaptureDevice.authorizationStatus(for: .video)
@@ -31,8 +29,12 @@ import PhotosUI
             #endif
         }
     }
+    private(set) var errorMessage: String = ""
+    var showErrorAlert: Bool = false
     
-    init(toastManager: ToastManager = ToastManager.shared, photoManager: PhotoManager = PhotoManager()) {
+    init(toastManager: ToastManagerProtocol = ToastManager.shared, 
+         photoManager: PhotoManagerProtocol = PhotoManager()
+    ) {
         self.photoManager = photoManager
         self.toastManager =  toastManager
         print("init: CameraViewModel")

@@ -14,7 +14,11 @@ struct CameraView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel = CameraViewModel()
     @ObservedResults(Photo.self, sortDescriptor: SortDescriptor(keyPath: "captureDate", ascending: false)) private var photos
-    let action: () -> Void
+    private let action: () -> Void
+    
+    init(action: @escaping () -> Void) {
+        self.action = action
+    }
     
     var body: some View {
         VStack(spacing: 0) {

@@ -9,13 +9,8 @@ import SwiftUI
 import RealmSwift
 
 struct HomeScreen: View {
-    @State var toastManager: ToastManager = ToastManager.shared
+    @State var toastManager: ToastManagerProtocol = ToastManager.shared
     @State private var selectedTab: Tab = .photoGallery
-    
-    enum Tab: String, CaseIterable {
-        case photoGallery = "Photo Gallery"
-        case camera = "Camera"
-    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,7 +31,6 @@ struct HomeScreen: View {
         .frame(width: 450)
         #endif
         .toast(toastManager)
-        .environment(toastManager)
     }
 }
 

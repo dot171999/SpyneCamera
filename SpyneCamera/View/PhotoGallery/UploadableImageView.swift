@@ -9,8 +9,13 @@ import SwiftUI
 
 struct UploadableImageView: View {
     @Environment(\.colorScheme) private var colorScheme
-    let progress: Float?
-    let photo: Photo
+    private let progress: Float?
+    private let photo: Photo
+    
+    init(progress: Float?, photo: Photo) {
+        self.progress = progress
+        self.photo = photo
+    }
     
     var body: some View {
         Rectangle()

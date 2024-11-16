@@ -9,12 +9,14 @@ import Foundation
 import RealmSwift
 
 @Observable class PhotoGalleryViewModel {
-    private let photoManager: PhotoManager
-    private let toastManager: ToastManager
+    private let photoManager: PhotoManagerProtocol
+    private let toastManager: ToastManagerProtocol
     private(set) var errorMessage: String = ""
     var showErrorAlert: Bool = false
     
-    init(toastManager: ToastManager = ToastManager.shared, photoManager: PhotoManager = PhotoManager()) {
+    init(toastManager: ToastManagerProtocol = ToastManager.shared,
+         photoManager: PhotoManagerProtocol = PhotoManager()
+    ) {
         self.photoManager = photoManager
         self.toastManager =  toastManager
         print("init: PhotoGalleryViewModel")
@@ -32,7 +34,7 @@ import RealmSwift
             }
             guard !photosNotUploaded.isEmpty else { return }
             toastManager.show(message: "Uploading photos.")
-            try await photoManager.requestUploadToCloud(photos: photos)
+            try await photoManager.upload(photos: photos)
             toastManager.show(message: "Photos uploaded.")
         } catch {
             errorMessage = error.localizedDescription

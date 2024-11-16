@@ -7,7 +7,12 @@
 
 import Foundation
 
-class DataFileManager {
+protocol DataFileManagerProtocol {
+    func writeData(_ data: Data, atPath pathURL: URL) throws
+    func generatePathUrl(forFileName name: String, fileExtension: String, in directory: FileManager.SearchPathDirectory) -> URL?
+}
+
+class DataFileManager: DataFileManagerProtocol {
     func writeData(_ data: Data, atPath pathURL: URL) throws {
         do {
             try data.write(to: pathURL)

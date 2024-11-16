@@ -9,12 +9,12 @@ import SwiftUI
 
 struct HomeTabBarView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Binding private(set) var selectedTab: HomeScreen.Tab
+    @Binding private(set) var selectedTab: Tab
     @Namespace private var animation
     
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(HomeScreen.Tab.allCases, id: \.rawValue) { tab in
+            ForEach(Tab.allCases, id: \.rawValue) { tab in
                 VStack {
                     Text(tab.rawValue)
                     if selectedTab == tab {
@@ -42,5 +42,5 @@ struct HomeTabBarView: View {
 }
 
 #Preview {
-    HomeTabBarView(selectedTab: .constant(HomeScreen.Tab.photoGallery))
+    HomeTabBarView(selectedTab: .constant(Tab.photoGallery))
 }

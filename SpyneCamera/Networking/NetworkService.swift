@@ -9,11 +9,12 @@ import Foundation
 
 protocol NetworkProtocol {
     func uploadTask(with request: URLRequest, taskID: String) async -> Result<Data, NetworkError>
+    var sessionDelegate: URLSessionDelegate? { get set }
 }
 
 class NetworkService: NetworkProtocol {
     private let sessionTimeoutInSeconds: TimeInterval = 10
-    private weak var sessionDelegate: URLSessionDelegate?
+    weak var sessionDelegate: URLSessionDelegate?
     
     private var session: URLSession {
         let configuration = URLSessionConfiguration.default

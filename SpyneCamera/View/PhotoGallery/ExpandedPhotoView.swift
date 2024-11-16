@@ -9,7 +9,11 @@ import SwiftUI
 
 struct ExpandedPhotoView: View {
     @Environment(\.dismiss) private var dismiss
-    let photo: Photo
+    private let photo: Photo
+    
+    init(photo: Photo) {
+        self.photo = photo
+    }
     
     var body: some View {
         VStack(alignment: .leading) {

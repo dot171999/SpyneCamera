@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension View {
-    func toast(_ toastManager: ToastManager) -> some View {
+    func toast(_ toastManager: ToastManagerProtocol) -> some View {
         modifier(ToastModifier(toastManager: toastManager))
     }
 }

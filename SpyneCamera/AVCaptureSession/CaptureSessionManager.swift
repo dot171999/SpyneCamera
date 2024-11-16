@@ -13,7 +13,7 @@ protocol CaptureSession {
     func configureSession() async throws
     func startSession() async -> Bool
     func stopSession() async
-    func capturePhoto(photoCaptureDelegate: PhotoCaptureDelegate) async throws
+    func capturePhoto(photoCaptureDelegate: AVCapturePhotoCaptureDelegate) async throws
 }
 
 actor CaptureSessionManager: CaptureSession {
@@ -111,7 +111,7 @@ actor CaptureSessionManager: CaptureSession {
         captureSession.addOutput(capturePhotoOutput)
     }
     
-    func capturePhoto(photoCaptureDelegate: PhotoCaptureDelegate) throws {
+    func capturePhoto(photoCaptureDelegate: AVCapturePhotoCaptureDelegate) throws {
         guard isSessionConfiguredSuccessfully else { throw CaptureSessionError.sessionNotConfigured }
         let capturePhotoSettings = AVCapturePhotoSettings()
         capturePhotoOutput.capturePhoto(with: capturePhotoSettings, delegate: photoCaptureDelegate)

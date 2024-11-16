@@ -9,23 +9,32 @@ import Foundation
 import RealmSwift
 import PhotosUI
 
-@Observable class PhotoManager: NSObject {
-    private let urlRequestBuilder: UrlRequestBuilder = UrlRequestBuilder()
-    private let realmManager: RealmManager = RealmManager()
-    private let fileManager: DataFileManager = DataFileManager()
-    @ObservationIgnored lazy private var networkService: NetworkService = { [weak self] in
-        NetworkService(sessionDelegate: self)
-    }()
+protocol PhotoManagerProtocol {
+    func savePhoto(_ uiImage: UIImage) throws
+    @MainActor func upload(photos: Results<Photo>) async throws
+    func allPhotos() -> Results<Photo>
+    var uploadingTaskProgress: (taskID: String, progress: Float) { get }
+}
+
+@Observable class PhotoManager: NSObject, PhotoManagerProtocol {
+    private let realmManager: RealmManagerProtocol
+    private let fileManager: DataFileManagerProtocol
+    private var networkService: NetworkProtocol
     
     // Acts like a serial queue
     private var pendingUploadRequests: [Photo] = []
     private var uploadInProgress: Bool = false
     private(set) var uploadingTaskProgress: (taskID: String, progress: Float) = ("empty", 0)
     
-    override init() {
-        print("init: Photo Service")
+    init(realmManager: RealmManagerProtocol = RealmManager(),
+         fileManager: DataFileManagerProtocol = DataFileManager(),
+         networkService: NetworkProtocol = NetworkService()
+    ) {
+        self.realmManager = realmManager
+        self.fileManager = fileManager
+        self.networkService = networkService
     }
-    
+   
     deinit {
         print("deinit: Photo Service")
     }
@@ -45,7 +54,7 @@ import PhotosUI
         try saveToRealm(url: photoFileUrl, name: photoName)
     }
     
-    @MainActor func requestUploadToCloud(photos: Results<Photo>) async throws {
+    @MainActor func upload(photos: Results<Photo>) async throws {
         queuePhotosForUpload(photos)
 
         guard !uploadInProgress else { print("returning"); return }
@@ -58,7 +67,7 @@ import PhotosUI
         try await processNextPhotoUpload()
     }
     
-    func queuePhotosForUpload(_ photos: Results<Photo>) {
+     private func queuePhotosForUpload(_ photos: Results<Photo>) {
         for photo in photos {
             guard !photo.isUploaded else { break }
             guard !(pendingUploadRequests.contains { $0.name == photo.name }) else { break }
@@ -94,8 +103,9 @@ import PhotosUI
     
         let url: URL = API.urlForEndpoint(.upload)
         let boundry: String = photo.name
-        let bodyData: Data = urlRequestBuilder.createHttpBody(mimeType: .jpgImage, fileName: photo.name, field: "image", data: photoData, boundary: boundry)
-        let urlRequest: URLRequest = urlRequestBuilder.buildRequest(url: url, method: .post, mimeType: .multiPart(boundary: boundry), body: bodyData)
+        let bodyData: Data = UrlRequestBuilder.createHttpBody(mimeType: .jpgImage, fileName: photo.name, field: "image", data: photoData, boundary: boundry)
+        let urlRequest: URLRequest = UrlRequestBuilder.buildRequest(url: url, method: .post, mimeType: .multiPart(boundary: boundry), body: bodyData)
+        networkService.sessionDelegate = self
         let result = await networkService.uploadTask(with: urlRequest, taskID: photo.name)
         
         switch result {

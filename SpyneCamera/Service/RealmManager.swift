@@ -8,7 +8,14 @@
 import Foundation
 import RealmSwift
 
-class RealmManager {
+protocol RealmManagerProtocol {
+    func add<T: Object>(object: T) throws
+    func readAll<T: Object>() -> Results<T>
+    func objectForKey<T: Object>(primaryKey: String) -> T?
+    func update(_ block: () -> Void) throws
+}
+
+class RealmManager: RealmManagerProtocol {
     private lazy var realm: Realm = {
         do {
             return try Realm()

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		920A2F222CE4D37E002EB29E /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A2F212CE4D37E002EB29E /* API.swift */; };
 		920A2F242CE4D761002EB29E /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A2F232CE4D761002EB29E /* Data.swift */; };
-		920A2F272CE4E352002EB29E /* UrlRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A2F262CE4E352002EB29E /* UrlRequestBuilder.swift */; };
 		920A2F292CE578BE002EB29E /* LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A2F282CE578BE002EB29E /* LocalizedError.swift */; };
 		920CCD3F2CE37ECF002C8286 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920CCD3E2CE37ECF002C8286 /* RealmManager.swift */; };
 		920CCD412CE3A544002C8286 /* PhotoDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920CCD402CE3A544002C8286 /* PhotoDTO.swift */; };
@@ -30,6 +29,7 @@
 		925D99E22CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D99E12CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift */; };
 		928C75F72CE87CA10062D881 /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928C75F62CE87CA00062D881 /* ToastManager.swift */; };
 		928C75F92CE886030062D881 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928C75F82CE886030062D881 /* View.swift */; };
+		928C75FC2CE8D74F0062D881 /* DataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928C75FB2CE8D74F0062D881 /* DataTypes.swift */; };
 		929A382F2CE227CA00D0A436 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 929A382E2CE227CA00D0A436 /* RealmSwift */; };
 		929A38312CE2289000D0A436 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929A38302CE2289000D0A436 /* Photo.swift */; };
 		92E16B3A2CE0A3FD00B210E6 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E16B392CE0A3FD00B210E6 /* CameraView.swift */; };
@@ -55,7 +55,6 @@
 /* Begin PBXFileReference section */
 		920A2F212CE4D37E002EB29E /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		920A2F232CE4D761002EB29E /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
-		920A2F262CE4E352002EB29E /* UrlRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlRequestBuilder.swift; sourceTree = "<group>"; };
 		920A2F282CE578BE002EB29E /* LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedError.swift; sourceTree = "<group>"; };
 		920CCD3E2CE37ECF002C8286 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		920CCD402CE3A544002C8286 /* PhotoDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDTO.swift; sourceTree = "<group>"; };
@@ -77,6 +76,7 @@
 		925D99E12CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDataOutputSampleBufferDelegate.swift; sourceTree = "<group>"; };
 		928C75F62CE87CA00062D881 /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 		928C75F82CE886030062D881 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		928C75FB2CE8D74F0062D881 /* DataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypes.swift; sourceTree = "<group>"; };
 		929A38302CE2289000D0A436 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		92E16B392CE0A3FD00B210E6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		92E16B3B2CE0A64B00B210E6 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
@@ -131,8 +131,7 @@
 				9213C83F2CE09A0800934E14 /* Model */,
 				9213C83D2CE099F800934E14 /* View */,
 				9213C83E2CE09A0100934E14 /* ViewModel */,
-				920A2F252CE4D768002EB29E /* Extensions */,
-				920A2F282CE578BE002EB29E /* LocalizedError.swift */,
+				928C75FA2CE8D1700062D881 /* Support */,
 				9213C83C2CE0990700934E14 /* SpyneCamera.entitlements */,
 				92E16B3D2CE0C57900B210E6 /* TestView.swift */,
 				9213C8322CE098B700934E14 /* Assets.xcassets */,
@@ -173,6 +172,7 @@
 			children = (
 				929A38302CE2289000D0A436 /* Photo.swift */,
 				920CCD402CE3A544002C8286 /* PhotoDTO.swift */,
+				928C75FB2CE8D74F0062D881 /* DataTypes.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -181,7 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				920A2F212CE4D37E002EB29E /* API.swift */,
-				920A2F262CE4E352002EB29E /* UrlRequestBuilder.swift */,
 				9213C8442CE09A7000934E14 /* NetworkService.swift */,
 			);
 			path = Networking;
@@ -225,6 +224,15 @@
 				925D99D82CE2432700B63C89 /* ExpandedPhotoView.swift */,
 			);
 			path = PhotoGallery;
+			sourceTree = "<group>";
+		};
+		928C75FA2CE8D1700062D881 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				920A2F252CE4D768002EB29E /* Extensions */,
+				920A2F282CE578BE002EB29E /* LocalizedError.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,7 +331,7 @@
 				9244B99A2CE68F11004D8FB3 /* PhotoGalleryViewModel.swift in Sources */,
 				925D99D92CE2432700B63C89 /* ExpandedPhotoView.swift in Sources */,
 				925D99D72CE23E2F00B63C89 /* UploadableImageView.swift in Sources */,
-				920A2F272CE4E352002EB29E /* UrlRequestBuilder.swift in Sources */,
+				928C75FC2CE8D74F0062D881 /* DataTypes.swift in Sources */,
 				925D99E22CE2A16C00B63C89 /* VideoDataOutputSampleBufferDelegate.swift in Sources */,
 				920A2F292CE578BE002EB29E /* LocalizedError.swift in Sources */,
 				928C75F92CE886030062D881 /* View.swift in Sources */,

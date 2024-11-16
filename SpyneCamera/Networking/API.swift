@@ -8,28 +8,45 @@
 import Foundation
 
 struct API {
-    static let host: String = "www.clippr.ai"
-    static let baseUrl: URL = URL(string: "https://\(host)")!
+    static let baseUrl: URL = URL(string: "https://www.clippr.ai")!
     
-    enum Endpoint: String {
-        case upload = "api/upload"
+    static func urlForEndpoint(_ endpoint: APIEndpoint) -> URL {
+        return baseUrl.appending(path: endpoint.path)
     }
-    
-    static func urlForEndpoint(_ endpoint: Endpoint) -> URL {
-        switch endpoint {
-        case .upload:
-            return API.baseUrl.appending(path: Endpoint.upload.rawValue)
+}
+
+struct UrlRequestBuilder {
+    static func buildRequest(url: URL, method: HTTPMethod, mimeType: MIMEType = .none, body: Data? = nil, headers: [HTTPHeaderField: String]? = nil) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.setValue(url.host ?? "", forHTTPHeaderField: HTTPHeaderField.host.rawValue)
+        request.setValue(mimeType.stringValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
+        if let body {
+            request.httpBody = body
+            request.setValue("\(body.count)", forHTTPHeaderField: HTTPHeaderField.contentLength.rawValue)
         }
+        
+        if let headers = headers {
+            for (key, value) in headers {
+                request.addValue(value, forHTTPHeaderField: key.rawValue)
+            }
+        }
+        
+        return request
     }
-}
-
-enum HTTPHeaderField: String, Hashable {
-    case contentType = "Content-Type"
-    case host = "Host"
-    case contentLength = "Content-Length"
-    case contentDisposition = "Content-Disposition"
-}
-
-enum HTTPMethod: String {
-    case post = "POST"
+    
+    static func createHttpBody(mimeType: MIMEType, fileName: String, field: String, data: Data, boundary: String) -> Data {
+        var body = Data()
+        
+        body.append("--\(boundary)\r\n")
+        
+        body.append("\(HTTPHeaderField.contentDisposition.rawValue): form-data; name=\"\(field)\"; filename=\"\(fileName)\"\r\n")
+        body.append("\(HTTPHeaderField.contentType.rawValue): \(mimeType.stringValue)\r\n\r\n")
+        body.append(data)
+        body.append("\r\n")
+        
+        body.append("--\(boundary)--\r\n")
+        
+        return body
+    }
 }

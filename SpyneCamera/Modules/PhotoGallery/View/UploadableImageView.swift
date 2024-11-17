@@ -22,11 +22,9 @@ struct UploadableImageView: View {
             .aspectRatio(1, contentMode: .fit)
             .overlay(alignment: .center) {
                 #if targetEnvironment(simulator)
-                if let image = UIImage(named: "Image1") {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                }
+                Image("Image1")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
                 #else
                 if let image = UIImage(contentsOfFile: photo.urlPathString) {
                     Image(uiImage: image)

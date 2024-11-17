@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExpandedPhotoView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     private let photo: Photo
     
@@ -16,7 +17,7 @@ struct ExpandedPhotoView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             Rectangle()
                 .foregroundStyle(.black)
                 .overlay {
@@ -35,11 +36,13 @@ struct ExpandedPhotoView: View {
                 }
             VStack(alignment: .leading) {
                 Text("Name: \(photo.name)")
-                Text("Date: \(photo.captureDate)")
+                Text("Date: \(photo.captureDate)").lineLimit(1)
                 Text("Upload Status: \(photo.isUploaded)")
                 Text("Storage location: \(photo.urlPathString)")
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.gray.opacity(0.2))
         }
         .overlay(alignment: .topLeading, content: {
             Button(action: {
@@ -48,6 +51,7 @@ struct ExpandedPhotoView: View {
                 Image(systemName: "xmark.circle.fill")
                     .resizable()
                     .frame(width: 40, height: 40)
+                    .shadow(color: .black, radius: 5, x: 0, y: 1)
             })
             .padding()
         })

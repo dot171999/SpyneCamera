@@ -19,11 +19,6 @@ import RealmSwift
     ) {
         self.photoManager = photoManager
         self.toastManager =  toastManager
-        print("init: PhotoGalleryViewModel")
-    }
-    
-    deinit {
-        print("deinit: PhotoGalleryViewModel")
     }
     
     @MainActor

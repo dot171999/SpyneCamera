@@ -14,11 +14,6 @@ class VideoDataOutputSampleBufferDelegate : NSObject, AVCaptureVideoDataOutputSa
     
     init(completion: @escaping (_ result: Result<UIImage, VideoDataOutputError>) -> Void) {
         self.completion = completion
-        print("init: VideoDataOutputSampleBufferDelegate")
-    }
-    
-    deinit {
-        print("deinit: VideoDataOutputSampleBufferDelegate")
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {

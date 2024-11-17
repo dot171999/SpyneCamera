@@ -14,11 +14,6 @@ class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
     
     init(completion: @escaping (_ result: Result<UIImage, PhotoCaptureError>) -> Void) {
         self.completion = completion
-        print("init: PhotoCaptureDelegate")
-    }
-    
-    deinit {
-        print("deinit: PhotoCaptureDelegate")
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {

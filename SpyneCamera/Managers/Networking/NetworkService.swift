@@ -26,13 +26,8 @@ class NetworkService: NetworkProtocol {
     
     init(sessionDelegate: URLSessionDelegate? = nil) {
         self.sessionDelegate = sessionDelegate
-        print("init: NetworkService")
     }
-    
-    deinit {
-        print("deinit: NetworkService")
-    }
-    
+
     func uploadTask(with request: URLRequest, taskID: String = UUID().uuidString) async -> Result<Data, NetworkError> {
         let session = self.session
         do {

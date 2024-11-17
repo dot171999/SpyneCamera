@@ -23,15 +23,7 @@ class RealmManager: RealmManagerProtocol {
             fatalError("Failed to initialize Realm: \(error)")
         }
     }()
-    
-    init() {
-        print("init: RealmManager")
-    }
-    
-    deinit {
-        print("deinit: RealmManager")
-    }
-    
+
     func add<T: Object>(object: T) throws {
         do {
             try realm.write {

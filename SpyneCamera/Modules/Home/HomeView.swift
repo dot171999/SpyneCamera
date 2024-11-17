@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  SpyneCamera
 //
 //  Created by Aryan Sharma on 09/11/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import RealmSwift
 
-struct HomeScreen: View {
+struct HomeView: View {
     @State var toastManager: ToastManagerProtocol = ToastManager.shared
     @State private var selectedTab: Tab = .photoGallery
     
@@ -36,6 +36,6 @@ struct HomeScreen: View {
 
 #Preview {
     let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
-    return HomeScreen()
+    return HomeView()
         .environment(\.realmConfiguration, congif)
 }

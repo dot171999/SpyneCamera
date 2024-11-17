@@ -28,11 +28,6 @@ actor CaptureSessionManager: CaptureSession {
     
     init(videoBufferDelgate: AVCaptureVideoDataOutputSampleBufferDelegate) {
         self.videoBufferDelgate = videoBufferDelgate
-        print("init: CaptureSessionManager")
-    }
-
-    deinit {
-        print("deinit: CaptureSessionManager")
     }
     
     func configureSession() throws {

@@ -37,11 +37,6 @@ import PhotosUI
     ) {
         self.photoManager = photoManager
         self.toastManager =  toastManager
-        print("init: CameraViewModel")
-    }
-    
-    deinit {
-        print("deinit: CameraViewModel")
     }
     
     @ObservationIgnored lazy private var videoBufferDelgate: VideoDataOutputSampleBufferDelegate = {

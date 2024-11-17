@@ -34,10 +34,6 @@ protocol PhotoManagerProtocol {
         self.fileManager = fileManager
         self.networkService = networkService
     }
-   
-    deinit {
-        print("deinit: Photo Service")
-    }
     
     func savePhoto(_ uiImage: UIImage) throws {
         let photoName = UUID().uuidString

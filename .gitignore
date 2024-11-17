@@ -1,0 +1,57 @@
+# Xcode files
+.DS_Store
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+.package/
+
+# Archives
+*.xcarchive
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.temp
+
+# Logs
+*.log
+*.xcactivitylog
+
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# App metadata
+*.xccheckout
+*.xcuserstate
+*.xcsettings
+
+# Xcode IDE settings
+.idea/
+
+
+# Ignore configuration files created by Xcode
+*.xcconfig
+
+
+
+# Ignore machine-specific files
+*.xcuserdatad
+
+

@@ -10,6 +10,6 @@ import SwiftUI
 
 extension View {
     func toast(_ toastManager: ToastManagerProtocol) -> some View {
-        modifier(ToastViewModifier(toastManager: toastManager))
+        modifier(ToastModifier(toastManager: toastManager))
     }
 }

@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  NetworkService.swift
 //  SpyneCamera
 //
 //  Created by Aryan Sharma on 09/11/24.
@@ -12,7 +12,7 @@ protocol NetworkProtocol {
     var sessionDelegate: URLSessionDelegate? { get set }
 }
 
-class NetworkManager: NetworkProtocol {
+class NetworkService: NetworkProtocol {
     private let sessionTimeoutInSeconds: TimeInterval = 10
     weak var sessionDelegate: URLSessionDelegate?
     
@@ -26,11 +26,11 @@ class NetworkManager: NetworkProtocol {
     
     init(sessionDelegate: URLSessionDelegate? = nil) {
         self.sessionDelegate = sessionDelegate
-        print("init: NetworkManager")
+        print("init: NetworkService")
     }
     
     deinit {
-        print("deinit: NetworkManager")
+        print("deinit: NetworkService")
     }
     
     func uploadTask(with request: URLRequest, taskID: String = UUID().uuidString) async -> Result<Data, NetworkError> {
@@ -58,10 +58,10 @@ class NetworkManager: NetworkProtocol {
                 return .failure(.httpsRequestFailed(statusCode: httpResponse.statusCode))
             }
             
-            print("NetworkManager: Uploaded successfully with taskId: ", taskID)
+            print("NetworkService: Uploaded successfully with taskId: ", taskID)
             return .success(data)
         } catch {
-            print("NetworkManager error: ", error)
+            print("NetworkService error: ", error)
             if (error as? URLError)?.code == .timedOut {
                 return .failure(.urlRequestTimeout)
             }

@@ -28,7 +28,7 @@ protocol PhotoManagerProtocol {
     
     init(realmManager: RealmManagerProtocol = RealmManager(),
          fileManager: DataFileManagerProtocol = DataFileManager(),
-         networkService: NetworkProtocol = NetworkManager()
+         networkService: NetworkProtocol = NetworkService()
     ) {
         self.realmManager = realmManager
         self.fileManager = fileManager

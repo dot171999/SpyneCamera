@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum Tab: String, CaseIterable {
+    case photoGallery = "Photo Gallery"
+    case camera = "Camera"
+}
+
 enum APIEndpoint {
     case upload
     

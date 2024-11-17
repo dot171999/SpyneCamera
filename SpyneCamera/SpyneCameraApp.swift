@@ -11,7 +11,7 @@ import SwiftUI
 struct SpyneCameraApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            HomeScreen()
         }
     }
 }

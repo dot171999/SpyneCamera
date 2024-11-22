@@ -14,11 +14,7 @@ struct CameraView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel = CameraViewModel()
     @ObservedResults(Photo.self, sortDescriptor: SortDescriptor(keyPath: "captureDate", ascending: false)) private var photos
-    private let action: () -> Void
-    
-    init(action: @escaping () -> Void) {
-        self.action = action
-    }
+    @Binding var currentTab: Tab
     
     var body: some View {
         VStack(spacing: 0) {
@@ -37,8 +33,21 @@ struct CameraView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .clipped()
+        .onChange(of: viewModel.showErrorAlert) { _, _ in
+            // workaround for alert auto dismissing when in transition of sliding from gallery to camera tab.
+            if currentTab != .camera {
+                viewModel.showErrorAlert = false
+            }
+        }
+        .onChange(of: currentTab) { _, newValue in
+            if newValue == .camera && !viewModel.errorMessage.isEmpty {
+                viewModel.showErrorAlert = true
+            }
+        }
         .alert("Error", isPresented: $viewModel.showErrorAlert, actions: {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .none) {
+                viewModel.resetErrorMessage()
+            }
         }, message: {
             Text(viewModel.errorMessage)
         })
@@ -91,7 +100,9 @@ extension CameraView {
             }
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
-                action()
+                withAnimation {
+                    currentTab = .photoGallery
+                }
             }
     }
     
@@ -112,6 +123,6 @@ extension CameraView {
 
 #Preview {
     let congif = Realm.Configuration(inMemoryIdentifier:  UUID().uuidString)
-    return CameraView(action: {})
+    return CameraView(currentTab: .constant(.camera))
         .environment(\.realmConfiguration, congif)
 }

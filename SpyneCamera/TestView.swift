@@ -36,10 +36,40 @@ import SwiftUI
     }
 }
 
+@Observable class VM2 {
+    var a = 10
+    var temp: Int {
+        return a
+    }
+    
+    init() {
+        Task {
+            try? await Task.sleep(for: .seconds(4))
+            self.a = 30
+        }
+    }
+}
+
 struct TestView: View {
-    var vm = VM()
+    @State var temp = false
+    
     var body: some View {
-        TestView2(int: vm.getInt())
+        VStack(spacing: 20) {
+            if temp {
+                Rectangle()
+                    .frame(width: 200, height: 100)
+                    .foregroundStyle(.red)
+                    .transition(.asymmetric(insertion: .push(from: .top), removal: .push(from: .bottom)))
+            }
+            Spacer()
+            Button("Btn") {
+                withAnimation {
+                    temp.toggle()
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 

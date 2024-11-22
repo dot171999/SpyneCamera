@@ -20,7 +20,7 @@ struct ToastModifier: ViewModifier {
                     .background(colorScheme == .dark ? .black.opacity(0.95) : .white.opacity(0.95))
                     .clipShape(.rect(cornerRadius: 10))
                     .overlay {
-                        RoundedRectangle(cornerRadius: 10).stroke(colorScheme == .dark ? .white.opacity(1) : .black.opacity(1), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 10).stroke(colorScheme == .dark ? .white : .black, lineWidth: 1)
                     }
                     .padding()
                     .zIndex(1)

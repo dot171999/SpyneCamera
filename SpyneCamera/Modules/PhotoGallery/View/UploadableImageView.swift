@@ -22,7 +22,7 @@ struct UploadableImageView: View {
             .aspectRatio(1, contentMode: .fit)
             .overlay(alignment: .center) {
                 #if targetEnvironment(simulator)
-                Image("Image1")
+                Image(["Image", "Image1"].randomElement()!)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                 #else
@@ -35,35 +35,24 @@ struct UploadableImageView: View {
             }
             .overlay(alignment: .bottom) {
                 if let progress {
-                    HStack {
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "play.fill")
-                        }
-                        ProgressView(value: progress)
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 5)
-                    .background(colorScheme == .dark ? .white : .black)
-                    .clipShape(.rect(cornerRadius: 5))
-                    .padding()
+                    ProgressView(value: progress)
+                        .scaleEffect(y: 4)
                 }
             }
             .overlay(alignment: .topTrailing) {
                 Circle()
-                    .frame(width: 20)
-                    .foregroundStyle(photo.isUploaded ? .green : .red)
+                    .frame(width: 15)
+                    .foregroundStyle(.red)
                     .background(Circle()
                         .stroke(Color.white ,lineWidth: 4))
                     .padding()
                     .shadow(color: .black, radius: 20)
-                    
+                    .opacity(photo.isUploaded ? 0 : 1)
             }
             .clipped()
     }
 }
 
 #Preview {
-    UploadableImageView(progress: 0, photo: Photo())
+    UploadableImageView(progress: 0.5, photo: Photo())
 }

@@ -15,8 +15,8 @@ struct PhotoGalleryView: View {
     @ObservedResults(Photo.self, sortDescriptor: SortDescriptor(keyPath: "captureDate", ascending: false)) private var photos
     
     private let lazyVGridRowSpacing: CGFloat = 2
-    private let lazyVGridColumns: [GridItem] = [GridItem(spacing: 2), GridItem()]
-    
+    private let lazyVGridColumns: [GridItem] = [GridItem(spacing: 2), GridItem(spacing: 2), GridItem(spacing: 0)]
+
     var body: some View {
         ScrollView {
             LazyVGrid(columns: lazyVGridColumns, spacing: lazyVGridRowSpacing) {
@@ -28,7 +28,7 @@ struct PhotoGalleryView: View {
                 }
                 #if targetEnvironment(simulator)
                 ForEach(0..<50, id: \.self) { photo in
-                    UploadableImageView(progress: 0.5, photo: Photo())
+                    UploadableImageView(progress: Float.random(in: 0...1), photo: Photo())
                         .onTapGesture {
                             presentSheet = Photo()
                         }
@@ -36,6 +36,23 @@ struct PhotoGalleryView: View {
                 #endif
             }
         }
+        .safeAreaInset(edge: .top, spacing: 0, content: {
+            if viewModel.isUploading {
+                HStack(spacing: 20) {
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "pause.fill")
+                    }.padding(.horizontal, 10)
+                    ProgressView(value: viewModel.totalUploadProgress)
+                        .scaleEffect(y: 1.5)
+                    Text("\(Int((viewModel.totalUploadProgress * 100).rounded()))%")
+                }
+                .padding()
+                .transition(.asymmetric(insertion: .push(from: .top), removal: .push(from: .bottom)))
+                .background(colorScheme == .dark ? .black : .white)
+            }
+        })
         .alert("Error", isPresented: $viewModel.showErrorAlert, actions: {
             Button("OK", role: .cancel) {}
         }, message: {

@@ -17,21 +17,19 @@ struct HomeTabBarView: View {
             ForEach(Tab.allCases, id: \.rawValue) { tab in
                 VStack {
                     Text(tab.rawValue)
-                    if selectedTab == tab {
-                        Rectangle()
-                            .frame(height: 3)
-                            .foregroundStyle(Color("TabSelector"))
-                            .matchedGeometryEffect(id: "ActiveTab", in: animation)
-                    } else {
-                        Rectangle()
-                            .frame(height: 3)
-                            .opacity(0)
-                    }
+                    Rectangle()
+                        .frame(height: 3)
+                        .foregroundStyle(selectedTab == tab ? Color("TabSelector") : .clear)
+                        .opacity(selectedTab == tab ? 1 : 0)
+                        .matchedGeometryEffect(id: "ActiveTab", in: animation, isSource: selectedTab == tab)
+
                 }
                 .contentShape(Rectangle())
-                .animation(.snappy, value: selectedTab)
+                .animation(.bouncy, value: selectedTab)
                 .onTapGesture {
-                    selectedTab = tab
+                    withAnimation {
+                        selectedTab = tab
+                    }
                 }
             }
         }

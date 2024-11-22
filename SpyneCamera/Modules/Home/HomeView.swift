@@ -10,26 +10,23 @@ import RealmSwift
 
 struct HomeView: View {
     @State var toastManager: ToastManagerProtocol = ToastManager.shared
-    @State private var selectedTab: Tab = .photoGallery
+    @State private var selectedTab: Tab = .camera
     
     var body: some View {
         VStack(spacing: 0) {
             HomeTabBarView(selectedTab: $selectedTab)
-            
             TabView(selection: $selectedTab) {
                 PhotoGalleryView()
                     .tag(Tab.photoGallery)
-                CameraView() {
-                    selectedTab = .photoGallery
-                }
+                CameraView(currentTab: $selectedTab)
                 .tag(Tab.camera)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .ignoresSafeArea(.container, edges: .bottom)
-        #if targetEnvironment(macCatalyst)
+#if targetEnvironment(macCatalyst)
         .frame(width: 450)
-        #endif
+#endif
         .toast(toastManager)
     }
 }

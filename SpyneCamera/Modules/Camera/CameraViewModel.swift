@@ -43,7 +43,13 @@ import PhotosUI
         let videoBufferDelgate = VideoDataOutputSampleBufferDelegate(completion: { [weak self] result in
             switch result {
             case .success(let uiImage):
-                self?.cameraPreviewFrameImage = uiImage
+                guard let self = self else { return }
+                Task {
+                    await MainActor.run {
+                        self.cameraPreviewFrameImage = uiImage
+                    }
+                }
+                break
             case .failure(let error):
                 break
             }
@@ -55,13 +61,18 @@ import PhotosUI
         let photoCaptureDelegate = PhotoCaptureDelegate(completion: { [weak self] result in
             switch result {
             case .success(let uiImage):
-                self?.capturedImage = uiImage
-                do {
-                    try self?.photoManager.savePhoto(uiImage)
-                    self?.toastManager.show(message: "Photo saved to storage.")
-                } catch {
-                    self?.errorMessage = error.localizedDescription
-                    self?.showErrorAlert = true
+                guard let self = self else { return }
+                Task {
+                    await MainActor.run {
+                        self.capturedImage = uiImage
+                        do {
+                            try self.photoManager.savePhoto(uiImage)
+                            self.toastManager.show(message: "Photo saved to storage.")
+                        } catch {
+                            self.errorMessage = error.localizedDescription
+                            self.showErrorAlert = true
+                        }
+                    }
                 }
             case .failure(let error):
                 break
@@ -109,5 +120,9 @@ import PhotosUI
                 }
             }
         }
+    }
+    
+    func resetErrorMessage() {
+        errorMessage = ""
     }
 }

@@ -14,6 +14,7 @@ protocol PhotoManagerProtocol {
     @MainActor func upload(photos: Results<Photo>) async throws
     func allPhotos() -> Results<Photo>
     var uploadingTaskProgress: (taskID: String, progress: Float) { get }
+    var pendingUploadRequests: [Photo] { get }
 }
 
 @Observable class PhotoManager: NSObject, PhotoManagerProtocol {
@@ -22,14 +23,14 @@ protocol PhotoManagerProtocol {
     private var networkService: NetworkProtocol
     
     // Acts like a serial queue
-    private var pendingUploadRequests: [Photo] = []
+    private(set) var pendingUploadRequests: [Photo] = []
     private var uploadInProgress: Bool = false
     private(set) var uploadingTaskProgress: (taskID: String, progress: Float) = ("empty", 0)
     
     init(realmManager: RealmManagerProtocol = RealmManager(),
          fileManager: DataFileManagerProtocol = DataFileManager(),
-         networkService: NetworkProtocol = NetworkService()
-    ) {
+         networkService: NetworkProtocol = NetworkService())
+    {
         self.realmManager = realmManager
         self.fileManager = fileManager
         self.networkService = networkService
@@ -65,8 +66,8 @@ protocol PhotoManagerProtocol {
     
      private func queuePhotosForUpload(_ photos: Results<Photo>) {
         for photo in photos {
-            guard !photo.isUploaded else { break }
-            guard !(pendingUploadRequests.contains { $0.name == photo.name }) else { break }
+            guard !photo.isUploaded else { continue }
+            guard !(pendingUploadRequests.contains { $0.name == photo.name }) else { continue }
             pendingUploadRequests.append(photo)
         }
     }
@@ -120,7 +121,7 @@ protocol PhotoManagerProtocol {
     @discardableResult
     private func saveToRealm(url: URL, name: String) throws -> Photo {
         let photo = Photo()
-        photo.captureDate = Date()
+        photo.captureDate = Date.now
         photo.name = name
         photo.urlPathString = url.path
         
